@@ -73,18 +73,6 @@
           padding-top: 135px;
         }
       
-        /* Home Page */
-        .home-page 
-        {
-          text-align: center;
-        }
-      
-        .home-page h1
-        {
-          color:#F8F8FF;
-          font-family:cursive;
-        }
-      
         /* Login Page */
         .login-page 
         {
@@ -109,45 +97,6 @@
         {
           padding-top: 10px;
           padding-bottom: 10px;
-        }
-      
-        /* Register Page */
-        .register-page
-        {
-          text-align: center;
-        }
-      
-        .register-page h1
-        {
-          color:#F8F8FF;
-          font-family:cursive;
-        }
-      
-        .form-group
-        {
-          padding: 5px;
-        }
-      
-        .input
-        {
-          width: 50%;
-          height: 20px;
-        }
-      
-        .images
-        {
-          position:relative;
-          display:inline-block;
-        }
-      
-        .images p
-        {
-          position:relative;
-          width:100;
-          text-align:center;
-          left:0;
-          color:black;
-          font-family:cursive;
         }
       
       </style>
