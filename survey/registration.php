@@ -254,7 +254,7 @@
 
     <div class="register-page">
       <h1>Create Account</h1>
-        <form action="registration.php" method="post">
+        <form novalidate="novalidate" action="registration.php" method="post">
         <?php include('errors.php') ?>
         <fieldset class="field">
           <div class="form-group">
