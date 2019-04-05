@@ -64,7 +64,7 @@ if(count($errors) == 0)
     $host = "ssl://smtp.gmail.com"; 
     $port = "465"; 
     
-    $username = 'surveymasterdevteam@gmail.com'; 
+    $devemail = 'surveymasterdevteam@gmail.com'; 
     $password = 'devteam!';  
     $subject = "Email Verification for SurveyMaster"; 
     $body = '
@@ -72,7 +72,7 @@ if(count($errors) == 0)
     Thank you for signing up with SurveyMaster!
     Your account has been created. You will be able to login after you have activated your account by clicking the link below.
     
-    Username: '.$name.'
+    Username: '.$username.'
     Password: '.$password1.'
      
     Please click this link to activate your account:
@@ -81,17 +81,8 @@ if(count($errors) == 0)
     ';
 
     $headers = array ('From' => $from, 'To' => $to,'Subject' => $subject); 
-    $smtp = Mail::factory('smtp', array ('host' => $host, 'port' => $port, 'auth' => true, 'username' => $username, 'password' => $password));  
+    $smtp = Mail::factory('smtp', array ('host' => $host, 'port' => $port, 'auth' => true, 'username' => $devemail, 'password' => $password));  
     $mail = $smtp->send($to, $headers, $body);  
-    
-    // if (PEAR::isError($mail)) 
-    // { 
-    //     echo($mail->getMessage()); 
-    // } 
-    // else 
-    // { 
-    //     echo("Message successfully sent!\n"); 
-    // } 
     
     header("location: CreateSurvey.php"); 
 }
