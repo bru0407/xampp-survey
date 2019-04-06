@@ -1,4 +1,3 @@
-<?php include('server.php') ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,7 +20,7 @@
         <div class="dropdown">
           <button class="dropbtn">Menu<i class="down"></i></button>
           <div class="dropdown-content">
-            <?php if (empty($_SESSION['username'])) { ?>
+            <?php if (empty($_SESSION['loggedin']) || !isset($_SESSION['loggedin'])) { ?>
               <a href="registration.php">Register</a>
               <a href="Login.php">Login</a>
             <?php } else { ?>

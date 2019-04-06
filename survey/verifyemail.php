@@ -20,7 +20,7 @@
           <div class="dropdown">
             <button class="dropbtn">Menu<i class="down"></i></button>
             <div class="dropdown-content">
-              <?php if (empty($_SESSION['id'])) { ?>
+              <?php if (empty($_SESSION['loggedin']) || !isset($_SESSION['loggedin'])) { ?>
                 <a href="registration.php">Register</a>
                 <a href="Login.php">Login</a>
               <?php } else { ?>
@@ -37,25 +37,28 @@
     <div id="wrap">
         <!-- start PHP code -->
         <?php
-         $verified="false"; 
          if(isset($_GET['email']) && !empty($_GET['email']) && isset($_GET['verify_hash']) && !empty($_GET['verify_hash']))
          {
-            echo "<h1>Maaaaaybe?</h1>";
-            $find_query = "SELECT email, verify_hash FROM user WHERE email='".$email."' AND verify_hash='".$verify_hash."'";
+            $user_email = mysqli_real_escape_string($db, $_GET['email']);
+            $hash_verified = mysqli_real_escape_string($db, $_GET['verify_hash']);
+            $find_query = "SELECT * FROM user WHERE email='$user_email' AND verify_hash='$hash_verified'";
             $search = mysqli_query($db, $find_query) or die("Could not verify url."); 
             $match  = mysqli_num_rows($search);
             if($match > 0)
             {
-                echo "<h1>Please..............</h1>";
-                $activate_query = "UPDATE user SET verified='1' WHERE email='".$email."' AND verify_hash='".$verify_hash."'";
+                $activate_query = "UPDATE user SET verified='1' WHERE email='".$user_email."' AND verify_hash='".$hash_verified."'";
                 mysqli_query($db, $activate_query) or die(mysql_error());
-                $verified = "true";
-            }   
+                ?><p>Thank you for verifying your email address! You will be redirected to log in with your new credentials in a few seconds. </p><?php
+
+                echo ' <meta http-equiv="refresh" content="4;url=login.php">';
+            }
+            else
+            {
+              echo '<p>Something has gone wrong! Make sure you have copied and pasted the url correctly. If error persists, go fuck yourself.</p>';
+              echo '<meta http-equiv="refresh" content="4;url=registration.php">';
+            }
             
           } ?>
-         <?php if($verified=="true") : ?>
-          <h1>WHY IFJEKDLFJSK </h1>
-        <?php endif; ?>
         <!-- stop PHP Code -->
  
          

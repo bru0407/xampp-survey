@@ -1,7 +1,7 @@
 <?php
 session_start();
-unset($_SESSION['username']);
+$_SESSION = array(); 
 session_destroy();
-header("Location: Login.php");
+echo ' <meta http-equiv="refresh" content="0;url=login.php">';
 exit;
 ?>

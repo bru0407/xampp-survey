@@ -1,15 +1,11 @@
-<?php include('server.php') ?>
 <?php
-if(!(isset($_SESSION['username'])))
+session_start();
+ 
+// Check if the user is logged in, if not then redirect him to login page
+if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true)
 {
-  $_SESSION['msg'] = "You must log in to view this page.";
-  header("location: /survey/login.php");
-}
-if(isset($_GET['logout']))
-{
-  session_destroy();
-  unset($_SESSION['username']);
-  header("location: /survey/login.php");
+    echo ' <meta http-equiv="refresh" content="0;url=login.php">';
+    exit;
 }
 ?>
 
@@ -34,7 +30,7 @@ if(isset($_GET['logout']))
           <div class="dropdown">
             <button class="dropbtn">Menu<i class="down"></i></button>
             <div class="dropdown-content">
-              <?php if (empty($_SESSION['username'])) { ?>
+              <?php if (empty($_SESSION['loggedin']) || !isset($_SESSION['loggedin'])) { ?>
               <a href="registration.php">Register</a>
               <a href="Login.php">Login</a>
               <?php } else { ?>
@@ -48,10 +44,6 @@ if(isset($_GET['logout']))
     </div>
       <h1>Welcome <?php echo $_SESSION['username']; ?></h1>
       <br>
-      <button type="logout">
-        <a href="logout.php?logout='1'">Logout</a>
-      </button>
-        
   </body>
 <footer>Copyright &copy; COP4710<br></footer>
 </html>
