@@ -1,9 +1,13 @@
-<?php include('server.php') ?>
 <?php
-if(!(isset($_SESSION['username'])))
+
+session_start();
+// Include config file
+require_once "server.php";
+
+if(!(isset($_SESSION['loggedin'])))
 {
   $_SESSION['msg'] = "You must log in to view this page.";
-  header("location: /survey/login.php");
+  echo ' <meta http-equiv="refresh" content="4;url=login.php">';
 }
 if(isset($_GET['logout']))
 {
@@ -47,7 +51,7 @@ if(isset($_GET['logout']))
       </div>
     </div>
     <?php
-      if(isset($_SESSION['username'])) : ?>
+      if(isset($_SESSION['loggedin'])) : ?>
         <div class="createsurvey-page">
           <h1>Create Your Survey</h1>
           <form method="post">

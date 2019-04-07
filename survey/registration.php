@@ -1,6 +1,14 @@
 <?php
+session_start();
 // Include config file
 require_once "server.php";
+
+// Check if the user is already logged in, if yes then redirect him to welcome page
+if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true)
+{
+   echo ' <meta http-equiv="refresh" content="0;url=account.php">';
+    exit;
+}
  
 // Define variables and initialize with empty values
 $username = "";
@@ -82,9 +90,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
     // Check input errors before inserting in database
     if(empty($username_err) && empty($password_err) && empty($confirm_password_err)){
         
-        $passwords = md5($password1); //encrypt password
+        $hashed_password = password_hash($password1, PASSWORD_DEFAULT); //encrypt password
         $verify_hash = md5(rand(0,1000));
-        $query = "INSERT INTO user (username, email, pass, verify_hash, verified) VALUES ('$username', '$email', '$passwords', '$verify_hash', 0)";
+        $query = "INSERT INTO user (username, email, pass, verify_hash, verified) VALUES ('$username', '$email', '$hashed_password', '$verify_hash', 0)";
         mysqli_query($db, $query); 
         $_SESSION['username'] = $username; 
         $_SESSION['success'] = "Login successful.";
