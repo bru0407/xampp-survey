@@ -14,6 +14,7 @@ h1
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
   padding-top: 10px;
   text-align: center;
+  font-size: 45px;
 }
 
 p
@@ -288,7 +289,7 @@ footer
 
 .home-page h1
 {
-  font-size: 55px;
+  font-size: 60px;
   padding-top: 35px;
   margin: 0;
 }
@@ -321,7 +322,7 @@ footer
   width: 100%;
 }
 
-.wallpaper .btn 
+.wallpaper .btn
 {
   position: absolute;
   top: 50%;
@@ -337,7 +338,7 @@ footer
   border-radius: 5px;
 }
 
-.wallpaper .btn:hover 
+.wallpaper .btn:hover
 {
   background-color: black;
 }
@@ -367,4 +368,34 @@ footer
   text-align: center;
   border-style: double;
   border-width: 5px;
+}
+
+.createsurvey-page input[type=text]
+{
+  width: 100%;
+}
+
+.textbox
+{
+  border:2px solid black;
+  border-radius:4px;
+  width: 100%;
+}
+
+.form-group
+{
+  width: 70%;
+  margin: auto;
+  padding: 0;
+}
+
+.form-group label
+{
+  font-size: 20px;
+}
+
+/* Recipients Page */
+.table
+{
+  width: 100%;
 }
