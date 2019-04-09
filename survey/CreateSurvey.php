@@ -18,8 +18,8 @@ if(isset($_GET['logout']))
 
 // Define variables and initialize with empty values
 $username = $_SESSION['username'];
-$survey_title = "";
 $survey_desc = "";
+$survey_title = "";
 $title_err = "";
 $desc_err = "";
 $surveyID = 0;
@@ -53,11 +53,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
     $survey_title = mysqli_real_escape_string($db, $_POST['survey_title']);
   }
 
-  if(empty($survey_desc))
-  {
-    $desc_err = "";
-  }
-  else
+  if(!empty($_POST["survey_desc"]))
   {
     $survey_desc = mysqli_real_escape_string($db, $_POST['survey_desc']);
   }
@@ -148,14 +144,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
             </div>
 
             <br>
-
-            <div class="form-group <?php echo (!empty($desc_err)) ? 'has-error' : ''; ?>">
+            <div class="form-group  <?php echo (!empty($desc_err)) ? 'has-error' : ''; ?>">
               <label>Survey Description:</label>
               <br>
-              <input type="text" class="input" name="survey_desc" placeholder="(Optional) Enter survey description." value="<?php echo $survey_desc; ?>"/>
+              <input type="text" class="input" name="survey_desc" placeholder="Enter survey description." value="<?php echo $survey_desc; ?>"/>
               <br>
-              <span class="help-block"><?php echo $desc_err; ?></span>
-              <br>
+            <span class="help-block"><?php echo $desc_err; ?></span>
+            <br>
             </div>
 
             <br>
@@ -229,7 +224,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
             <br>
 
             <div class="button">
-              <!-- <a href="recipients.php"> -->
+              <a href="recipients.php">
                 <input type="submit" name="submit" id="submit" class="submit" value="Create Survey"/>
               </a>
             </div>

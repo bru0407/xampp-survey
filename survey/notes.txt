@@ -1,0 +1,5 @@
+day before survey ends if haven't taken automatic email reminder
+
+once create a survey , go to survey.php?url=eerkdfjalskj
+
+send recipients email, then go to the url and see the survey, and theoretically answer it
