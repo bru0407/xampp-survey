@@ -20,11 +20,16 @@ if(isset($_GET['logout']))
 $username = $_SESSION['username'];
 $survey_desc = "";
 $survey_title = "";
+$survey_start = "";
+$survey_end = "";
+$type1s = ["", "", "", "", ""];
+$type2s = ["", "", "", "", ""];
 $title_err = "";
 $desc_err = "";
-$surveyID = 0;
 $survey_url = "";
-$work = "";
+$start_err = "";
+$end_err = "";
+
 
 function makeURL()
 {
@@ -58,16 +63,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
     $survey_desc = mysqli_real_escape_string($db, $_POST['survey_desc']);
   }
 
-  //generate surveyID
-  do
-  {
-    $random_num = random_int(1, 255);
-    $survey_id_query = "SELECT * FROM surveys WHERE surveyID = '$random_num' LIMIT 1";
-    $id_check_result = mysqli_query($db, $survey_id_query);
-    $survey = mysqli_fetch_assoc($id_check_result);
-  } while($survey['surveyID'] == $random_num);
-  $surveyID = $random_num;
-
   //generate url
   do
   {
@@ -75,14 +70,37 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
     $url_check_query = "SELECT * FROM surveys WHERE survey_url = '$random_url' LIMIT 1";
     $url_check_result = mysqli_query($db, $url_check_query);
     $url_survey = mysqli_fetch_assoc($url_check_result);
-  } while($survey['survey_url'] == $random_num);
+  } while($url_survey['survey_url'] == $random_url);
   $survey_url = $random_url;
 
-  if(!empty($surveyID) && !empty($survey_url))
+  if(empty($_POST["survey_start"]))
   {
-    $insert_survey = "INSERT INTO surveys (username, surveyID, survey_url, survey_title, survey_desc) VALUES ('$username', '$surveyID', '$survey_url', '$survey_title', '$survey_desc')";
+    $start_error = "You must enter a start date.";
+  }
+  else
+  {
+    $survey_start = $_POST['survey_start'];
+    echo $survey_start;
+  }
+
+  if(empty($_POST["survey_end"]))
+  {
+    $end_error = "You must enter an end date.";
+  }
+  else
+  {
+    $survey_end = $_POST['survey_end'];
+  }
+
+  if(!empty($survey_url)) //and something about question count variables here
+  {
+    $insert_survey = "INSERT INTO surveys (username, survey_url, survey_title, survey_desc) VALUES ('$username',
+      '$survey_url', '$survey_title', '$survey_desc')";
     mysqli_query($db, $insert_survey);
+    $_SESSION['survey_url'] = $survey_url;
     $_SESSION['created'] = "Survey created successfully.";
+
+    echo ' <meta http-equiv="refresh" content="0;url=recipients.php">';
   }
 }
 
@@ -94,7 +112,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 <html lang="en">
     <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="./Style.css" type="text/css">
+    <link rel="stylesheet" href="./style.css" type="text/css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -117,10 +135,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
           <div class="dropdown-content">
             <?php if (empty($_SESSION['loggedin']) || !isset($_SESSION['loggedin'])) { ?>
               <a href="registration.php">Register</a>
-              <a href="Login.php">Login</a>
+              <a href="login.php">Login</a>
               <?php } else { ?>
               <a href="account.php">Account</a>
-              <a href="CreateSurvey.php">Create Survey</a>
+              <a href="createsurvey.php">Create Survey</a>
               <a href="logout.php">Logout</a>
               <?php } ?>
             </div>
@@ -130,8 +148,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
     </div>
         <div class="createsurvey-page">
           <h1>Create Your Survey</h1>
-          <h1>Welcome <?php echo $username, $surveyID, $survey_url, $survey_title, $survey_desc; ?></h1>
-          <form action="CreateSurvey.php" method="post">
+          <h1> OMFG  <?php echo $survey_start, $survey_end ?> </h1>
+          <form action="createsurvey.php" method="post">
           <fieldset class="create">
             <br>
             <div class="form-group  <?php echo (!empty($title_err)) ? 'has-error' : ''; ?>">
@@ -155,17 +173,22 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 
             <br>
 
-            <div class="form-group">
+            <div class="form-group <?php echo (!empty($start_err)) ? 'has-error' : ''; ?>">
               <label>Starting Date:</label>
-              <input type="text" id="start" placeholder="Enter survey starting date.">
+              <input type="text" id="survey_start" placeholder="Enter survey starting date." value="<?php echo $survey_start; ?>">
             </div>
+            <br>
+            <span class="help-block"><?php echo $start_err; ?></span>
 
             <br>
 
-            <div class="form-group">
+            <div class="form-group <?php echo (!empty($end_err)) ? 'has-error' : ''; ?>">
               <label>Ending Date:</label>
-              <input type="text" id="end" placeholder="Enter survey ending date.">
+              <input type="text" id="survey_end" placeholder="Enter survey ending date." value="<?php echo $survey_end; ?>">
             </div>
+            <br>
+            <span class="help-block"><?php echo $end_err; ?></span>
+            <br>
 
             <br>
 
@@ -224,9 +247,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
             <br>
 
             <div class="button">
-              <a href="recipients.php">
                 <input type="submit" name="submit" id="submit" class="submit" value="Create Survey"/>
-              </a>
             </div>
           </fieldset>
         </form>
@@ -252,8 +273,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 </script>
 <script>
   $( function() {
-    $( "#start" ).datepicker();
-    $( "#end" ).datepicker();
+    $( "#survey_start" ).datepicker({dateFormat: 'yy-mm-dd'}); //okay i'm losing my mind nothing in these dates is saving
+    $( "#survey_end" ).datepicker({dateFormat: 'yy-mm-dd'}); //saw someone say that it's bc it needs a .val() at the end to save it?? idk i'm going bananas
   } );
 </script>
 </body>

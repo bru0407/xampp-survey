@@ -9,17 +9,17 @@ if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true)
    echo ' <meta http-equiv="refresh" content="0;url=account.php">';
     exit;
 }
- 
+
 // Define variables and initialize with empty values
 $username = "";
-$email = ""; 
+$email = "";
 $password1 = "";
 $password2 = "";
 $username_err = "";
-$email_err = ""; 
+$email_err = "";
 $password_err = "";
 $confirm_password_err = "";
- 
+
 // Processing form data when form is submitted
 if($_SERVER["REQUEST_METHOD"] == "POST")
 {
@@ -27,14 +27,14 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
     if(empty($_POST["username"]))
     {
         $username_err = "Please enter a username.";
-    } 
+    }
     else
     {
         $username = mysqli_real_escape_string($db, $_POST['username']);
         $user_check_query = "SELECT * FROM user WHERE username = '$username' LIMIT 1";
-        $result = mysqli_query($db, $user_check_query); 
-        $user = mysqli_fetch_assoc($result); 
-        if($user['username'] === $username) 
+        $result = mysqli_query($db, $user_check_query);
+        $user = mysqli_fetch_assoc($result);
+        if($user['username'] === $username)
         {
             $username_err = "Username already in use.";
         }
@@ -44,40 +44,40 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
     if(empty($_POST["email"]))
     {
         $email_err = "Please enter an email.";
-    } 
+    }
     else
     {
         $email = mysqli_real_escape_string($db, $_POST['email']);
-        if(!filter_var($email, FILTER_VALIDATE_EMAIL)) 
+        if(!filter_var($email, FILTER_VALIDATE_EMAIL))
         {
             $email_err = "Please enter a valid email.";
         }
         else
         {
             $email_check_query = "SELECT * FROM user WHERE email = '$email' LIMIT 1";
-            $result = mysqli_query($db, $user_check_query); 
-            $user = mysqli_fetch_assoc($result); 
-            if($user['email'] === $email) 
+            $result = mysqli_query($db, $user_check_query);
+            $user = mysqli_fetch_assoc($result);
+            if($user['email'] === $email)
             {
                 $email_err = "Email already in use.";
             }
         }
     }
-    
+
     // Validate password
     if(empty($_POST["password1"]))
     {
-        $password_err = "Please enter a password.";     
-    } 
+        $password_err = "Please enter a password.";
+    }
     else
     {
         $password1 = mysqli_real_escape_string($db, $_POST['password1']);
     }
-    
+
     if(empty($_POST["password2"]))
     {
-        $password_err = "Please confirm password.";     
-    } 
+        $password_err = "Please confirm password.";
+    }
     else
     {
         $password2 = mysqli_real_escape_string($db, $_POST['password2']);
@@ -86,46 +86,47 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
             $password_err = "Passwords do not match.";
         }
     }
-    
+
     // Check input errors before inserting in database
     if(empty($username_err) && empty($password_err) && empty($confirm_password_err)){
-        
+
         $hashed_password = password_hash($password1, PASSWORD_DEFAULT); //encrypt password
         $verify_hash = md5(rand(0,1000));
         $query = "INSERT INTO user (username, email, pass, verify_hash, verified) VALUES ('$username', '$email', '$hashed_password', '$verify_hash', 0)";
-        mysqli_query($db, $query); 
-        $_SESSION['username'] = $username; 
+        mysqli_query($db, $query);
+        $_SESSION['username'] = $username;
         $_SESSION['success'] = "Login successful.";
 
-        require_once "Mail.php";  
-        $from = "surveymasterdevteam@gmail.com"; 
-        $to = $email;  
-        $host = "ssl://smtp.gmail.com"; 
-        $port = "465"; 
-        
-        $devemail = 'surveymasterdevteam@gmail.com'; 
-        $password = 'devteam!';  
-        $subject = "Email Verification for SurveyMaster"; 
+        require "Mail.php";
+        $from = "surveymasterdevteam@gmail.com";
+        $to = $email;
+        $host = "ssl://smtp.gmail.com";
+        $port = "465";
+
+        $devemail = 'surveymasterdevteam@gmail.com';
+        $password = 'devteam!';
+        $subject = "Email Verification for SurveyMaster";
         $body = '
-    
+
         Thank you for signing up with SurveyMaster!
         Your account has been created. You will be able to login after you have activated your account by clicking the link below.
-        
+
         Username: '.$username.'
         Password: '.$password1.'
-        
+
         Please click this link to activate your account:
-        localhost/survey/verifyemail.php?email='.$email.'&verify_hash='.$verify_hash.'
-        
+        <a href ="localhost/survey/verifyemail.php?email='.$email.'&verify_hash='.$verify_hash.'">
+        localhost/survey/verifyemail.php?email='.$email.'&verify_hash='.$verify_hash.'</a>
+
         ';
 
-        $headers = array ('From' => $from, 'To' => $to,'Subject' => $subject); 
-        $smtp = Mail::factory('smtp', array ('host' => $host, 'port' => $port, 'auth' => true, 'username' => $devemail, 'password' => $password));  
-        $mail = $smtp->send($to, $headers, $body);  
-        
+        $headers = array ('From' => $from, 'To' => $to,'Subject' => $subject);
+        $smtp = Mail::factory('smtp', array ('host' => $host, 'port' => $port, 'auth' => true, 'username' => $devemail, 'password' => $password));
+        $mail = $smtp->send($to, $headers, $body);
+
         echo ' <meta http-equiv="refresh" content="0;url=account.php">';
         }
-        
+
         // Close connection
         mysqli_close($db);
 }
@@ -134,7 +135,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="./Style.css" type="text/css">
+    <link rel="stylesheet" href="./style.css" type="text/css">
       <title>New User</title>
   </head>
   <body>
@@ -153,10 +154,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
             <div class="dropdown-content">
               <?php if (empty($_SESSION['loggedin']) || !isset($_SESSION['loggedin'])) { ?>
                 <a href="registration.php">Register</a>
-                <a href="Login.php">Login</a>
+                <a href="login.php">Login</a>
               <?php } else { ?>
                 <a href="account.php">Account</a>
-                <a href="CreateSurvey.php">Create Survey</a>
+                <a href="createsurvey.php">Create Survey</a>
               <?php } ?>
             </div>
           </div>
@@ -207,7 +208,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
           </div>
         </fieldset>
       </form>
-      <p>Already a user? <a href="Login.php">Login</a></p>
+      <p>Already a user? <a href="login.php">Login</a></p>
     </div>
   </body>
   <footer>Copyright &copy; COP4710<br></footer>
