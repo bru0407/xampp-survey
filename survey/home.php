@@ -1,12 +1,10 @@
-<?php
-session_start();
-// Include config file
-require_once "server.php";?>
+<?php include('server.php');
+session_start()?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <link rel="stylesheet" href="./Style.css" type="text/css">
+  <link rel="stylesheet" href="./style.css" type="text/css">
   <title>Home Page</title>
 </head>
 <body>
@@ -15,7 +13,8 @@ require_once "server.php";?>
     <div class="inner_header">
       <div class="logo_container">
         <a href="/survey/home.php">
-          <h1> <img src="http://www.flexrule.com/wp-content/uploads/2014/06/db.png" alt="" width="50" height="50">
+          <img src="https://cdn.pixabay.com/photo/2017/05/15/23/48/survey-2316468_1280.png" alt="" width="50" height="50">
+           <h1>
             SurveyMaster
           </h1>
         </a>
@@ -26,11 +25,12 @@ require_once "server.php";?>
           <div class="dropdown-content">
             <?php if (empty($_SESSION['loggedin']) || !isset($_SESSION['loggedin'])) { ?>
               <a href="registration.php">Register</a>
-              <a href="Login.php">Login</a>
-            <?php } else { ?>
+              <a href="login.php">Login</a>
+              <?php } else { ?>
               <a href="account.php">Account</a>
-            <a href="CreateSurvey.php">Create Survey</a>
-            <?php } ?>
+              <a href="createsurvey.php">Create Survey</a>
+              <a href="logout.php">Logout</a>
+              <?php } ?>
           </div>
         </div>
       </ul>
@@ -50,9 +50,9 @@ require_once "server.php";?>
       >
       <button class="btn">
         <?php if (empty($_SESSION['loggedin']) || !isset($_SESSION['loggedin'])) { ?>
-            <a href="Login.php">Start Here</a>
+            <a href="login.php">Start Here</a>
         <?php } else { ?>
-            <a href="CreateSurvey.php">Start Here</a>
+            <a href="createsurvey.php">Start Here</a>
         <?php } ?>
       </button>
   </div>
@@ -61,13 +61,13 @@ require_once "server.php";?>
     <h1>Acknowledgements</h1>
     <div class="column">
       <img
-        src="https://www.svgrepo.com/show/49676/climbing.svg"
+        src="https://cdn0.iconfinder.com/data/icons/education-circular-2/90/92-512.png"
         alt=""
         class="award"
         width="100"
         height="auto"
       >
-      <h2>Rising</h2>
+      <h2>A+</h2>
       <h2>Award</h2>
     </div>
     <div class="column">
