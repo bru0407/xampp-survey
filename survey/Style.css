@@ -27,25 +27,37 @@ input[type=text]
 {
   border:2px solid black;
   border-radius:4px;
+
+  padding-bottom: 5px;
+  padding-top: 5px;
 }
 
 input[type=email]
 {
   border:2px solid black;
   border-radius:4px;
+
+  padding-bottom: 5px;
+  padding-top: 5px;
 }
 
 input[type=password]
 {
   border:2px solid black;
   border-radius:4px;
+
+  padding-bottom: 5px;
+  padding-top: 5px;
 }
 
 input[type=submit]
 {
   background-color:black;
   font-family:cursive;
+  font-size: 15px;
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+  padding: 10px;
+
   color:#F8F8FF;
 }
 
@@ -91,6 +103,7 @@ footer
   text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }
 
+
 /* Creating 3 equal Columns */
 .column {
   float: left;
@@ -115,6 +128,22 @@ footer
 {
   color:#F8F8FF;
   font-family:cursive;
+}
+
+.login-page a
+{
+  color: blue;
+  text-shadow: none;
+}
+
+.login-page .form-group
+{
+  width: 50%;
+}
+
+.login-page .form-group input
+{
+  width: 100%;
 }
 
 .field
@@ -154,15 +183,14 @@ footer
   text-shadow: none;
 }
 
-.form-group
-{
-  padding: 5px;
-}
-
-.input
+.register-page .form-group
 {
   width: 50%;
-  height: 20px;
+}
+
+.register-page .form-group input
+{
+  width: 100%;
 }
 
 .images
@@ -370,6 +398,11 @@ footer
   border-width: 5px;
 }
 
+.createsurvey-page input[type=date]
+{
+  width: 100%;
+}
+
 .createsurvey-page input[type=text]
 {
   width: 100%;
@@ -394,8 +427,143 @@ footer
   font-size: 20px;
 }
 
+.charNum
+{
+  color: white;
+  font-family:cursive;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+
+}
+
 /* Recipients Page */
 .table
 {
   width: 100%;
+}
+
+.table button
+{
+  float: right;
+}
+
+.input-icon {
+  position: relative;
+}
+
+.input-icon > i {
+  position: absolute;
+  display: block;
+  transform: translate(0, -50%);
+  top: 50%;
+  pointer-events: none;
+  width: 25px;
+  text-align: center;
+  font-style: normal;
+}
+
+.input-icon > input {
+  padding-left: 25px;
+  padding-right: 0;
+}
+
+.recipients label
+{
+  font-size: 25px;
+}
+
+/* Account Page */
+.account-page
+{
+  text-align: center;
+}
+
+.account-page .btn
+{
+  background-color: red;
+  color: white;
+  font-size: 16px;
+  padding: 12px 24px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.account-page .btn:hover
+{
+  background-color: darkred;
+}
+
+.account-page .btn a
+{
+  color: white;
+  text-decoration: none;
+}
+
+/* Survey */
+.box
+{
+  background: seagreen;
+  max-width: 70%;
+  margin: auto;
+  border-radius: 4px;
+  border: 3px double black;
+}
+
+.survey-page
+{
+  text-align: center;
+  margin: 0;
+}
+
+.survey-page textarea
+{
+  border:2px;
+  border-color: black;
+  border-style: solid;
+  border-radius:4px;
+  width: 100%;
+  padding: 10px;
+}
+
+.survey-page h1
+{
+  font-size: 55px;
+}
+
+.survey-page h2
+{
+  padding-top: 30px;
+  font-size: 30px;
+  color:#FFFFFF;
+  font-family:cursive;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+  margin: 0;
+}
+
+.survey-page p
+{
+  font-size: 20px;
+}
+
+.survey-page .form-group p
+{
+  font-size: 15px;
+  padding: 0;
+  margin: 0;
+}
+
+input[type=show]
+{
+  background: none;
+  color:#FFFFFF;
+  font-family:cursive;
+  font-size: 15px;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+  text-align: center;
+  border: none;
+}
+
+.padding-bottom
+{
+  padding-bottom: 20px;
 }

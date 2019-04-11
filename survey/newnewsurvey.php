@@ -12,20 +12,15 @@ if(isset($_GET['logout']))
 $username = $_SESSION['username'];
 $survey_desc = "";
 $survey_title = "";
-$start = "";
-$end = "";
-$type11 = "";
-$type12 = "";
-$type2 = "";
+$survey_start = "";
+$survey_end = "";
+$type1s = ["", "", "", "", ""];
+$type2s = ["", "", "", "", ""];
 $title_err = "";
 $desc_err = "";
 $survey_url = "";
 $start_err = "";
 $end_err = "";
-$type11_err = "";
-$type12_err = "";
-$type2_err = "";
-
 function makeURL()
 {
     $chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -51,12 +46,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
   {
     $survey_title = mysqli_real_escape_string($db, $_POST['survey_title']);
   }
-
   if(!empty($_POST["survey_desc"]))
   {
     $survey_desc = mysqli_real_escape_string($db, $_POST['survey_desc']);
   }
-
   //generate url
   do
   {
@@ -66,47 +59,28 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
     $url_survey = mysqli_fetch_assoc($url_check_result);
   } while($url_survey['survey_url'] == $random_url);
   $survey_url = $random_url;
-
-  if(empty($_POST["type11"]))
+  if(empty($_POST["survey_start"]))
   {
-    $type11_err = "You must enter a first question of type 1.";
+    $start_error = "You must enter a start date.";
   }
   else
   {
-    $type11 = mysqli_real_escape_string($db, $_POST['type11']);
+    $survey_start = $_POST['survey_start'];
+    echo $survey_start;
   }
-
-  if(empty($_POST["type12"]))
+  if(empty($_POST["survey_end"]))
   {
-    $type12_err = "You must enter a second question of type 1.";
-  }
-  else
-  {
-    $type12 = mysqli_real_escape_string($db, $_POST['type12']);
-  }
-
-if(empty($_POST["type2"]))
-  {
-    $type2_err = "You must enter a type 2 question.";
+    $end_error = "You must enter an end date.";
   }
   else
   {
-    $type2 = mysqli_real_escape_string($db, $_POST['type2']);
+    $survey_end = $_POST['survey_end'];
   }
-
-
-  if(!empty($survey_url) && !empty($start) && !empty($end) && !empty($type11) && !empty($type12) && !empty($type2))
+  if(!empty($survey_url)) //and something about question count variables here
   {
-    $insert_survey = "INSERT INTO surveys (username, survey_url, survey_title, survey_desc, survey_start_date, survey_end_date) VALUES ('$username',
-      '$survey_url', '$survey_title', '$survey_desc', '$start', '$end')";
+    $insert_survey = "INSERT INTO surveys (username, survey_url, survey_title, survey_desc) VALUES ('$username',
+      '$survey_url', '$survey_title', '$survey_desc')";
     mysqli_query($db, $insert_survey);
-    $insert_type11 = "INSERT INTO type11 (survey_url, question) VALUES ('$survey_url', '$type11')";
-    mysqli_query($db, $insert_type11);
-    $insert_type12 = "INSERT INTO type12 (survey_url, question) VALUES ('$survey_url', '$type12')";
-    mysqli_query($db, $insert_type12);
-    $insert_type2 = "INSERT INTO type2 (survey_url, question) VALUES ('$survey_url', '$type2')";
-    mysqli_query($db, $insert_type2);
-
     $_SESSION['survey_url'] = $survey_url;
     $_SESSION['created'] = "Survey created successfully.";
     echo ' <meta http-equiv="refresh" content="0;url=recipients.php">';
@@ -136,8 +110,6 @@ if(empty($_POST["type2"]))
       };
     </script>
     <title>Create Survey</title>
-    <?php echo $start, $end;
-    echo $type11, $type12, $type2 ?>
   </head>
   <body>
     <div class="header">
@@ -180,6 +152,7 @@ if(empty($_POST["type2"]))
             <span class="help-block"><?php echo $title_err; ?></span>
             <br>
             </div>
+
             <br>
             <div class="form-group  <?php echo (!empty($desc_err)) ? 'has-error' : ''; ?>">
               <label>Survey Description:</label>
@@ -190,45 +163,80 @@ if(empty($_POST["type2"]))
             <span class="help-block"><?php echo $desc_err; ?></span>
             <br>
             </div>
+
             <br>
+
             <div class="form-group <?php echo (!empty($start_err)) ? 'has-error' : ''; ?>">
               <label>Starting Date:</label>
-              <input type="date" class="datepicker" id="start" name="start" placeholder="Enter survey starting date." value="<?php echo $start; ?>">
+              <input type="date" class="datepicker" id="start" name="start" placeholder="Enter survey starting date." value="<?php echo $survey_start; ?>">
             </div>
             <br>
             <span class="help-block"><?php echo $start_err; ?></span>
+
             <br>
+
             <div class="form-group <?php echo (!empty($end_err)) ? 'has-error' : ''; ?>">
               <label>Ending Date:</label>
-              <input type="text" class="datepicker" id="end" name="end" placeholder="Enter survey ending date." value="<?php echo $end; ?>">
+              <input type="text" class="datepicker" id="end" name="end" placeholder="Enter survey ending date." value="<?php echo $survey_end; ?>">
             </div>
             <br>
             <span class="help-block"><?php echo $end_err; ?></span>
             <br>
+
             <br>
-            <div class="form-group <?php echo (!empty($type11_err)) ? 'has-error' : ''; ?>">
-              <label>Type 1 Question 1:</label>
-            <input type="text" name="type11" placeholder="Enter 1-5 type question." class="type11" id="type11" />
-            <br>
-            <span class="help-block"><?php echo $type11_err; ?></span>
+
+            <div class="form-group">
+              <label>Type 1 Questions:</label>
+              <table class="table table-bordered" id="type1">
+                <tr>
+                    <td>
+                      <input
+                        type="text"
+                        name="name[]"
+                        placeholder="Enter 1-5 type question."
+                        class="type11"
+                        id="type11"
+                      />
+                    </td>
+                    <td>
+                      <button
+                        type="button"
+                        name="add"
+                        id="add1"
+                        class="btn btn-success"
+                        >Add More</button>
+                    </td>
+                  </tr>
+                </table>
             </div>
+
             <br>
-            <br>
-            <div class="form-group <?php echo (!empty($type12_err)) ? 'has-error' : ''; ?>">
-              <label>Type 1 Question 2:</label>
-            <input type="text" name="type12" placeholder="Enter 1-5 type question." class="type12" id="type12" />
-            <br>
-            <span class="help-block"><?php echo $type12_err; ?></span>
+
+            <div class="form-group">
+              <label>Type 2 Questions:</label>
+              <table class="table table-bordered" id="type2">
+                <tr>
+                    <td>
+                      <input
+                        type="text"
+                        name="name[]"
+                        placeholder="Enter text type question."
+                        class="type2"
+                        id="type2"
+                      />
+                    </td>
+                    <td>
+                      <button
+                        type="button"
+                        name="add"
+                        id="add2"
+                        class="btn btn-success"
+                        >Add More</button>
+                    </td>
+                  </tr>
+                </table>
             </div>
-            <br>
-            <br>
-            <div class="form-group <?php echo (!empty($type2_err)) ? 'has-error' : ''; ?>">
-              <label>Type 2 Question:</label>
-            <input type="text" name="type2" placeholder="Enter 1-5 type question." class="type2" id="type2" />
-            <br>
-            <span class="help-block"><?php echo $type2_err; ?></span>
-            </div>
-            <br>
+
             <br>
 
             <div class="button">
@@ -240,7 +248,7 @@ if(empty($_POST["type2"]))
         </form>
     </div>
 
-<!-- <script type="text/javascript">
+<script type="text/javascript">
     $(document).ready(function(){
       var i=1;
       $('#add1').click(function(){
@@ -256,12 +264,12 @@ if(empty($_POST["type2"]))
            $('#row'+button_id+'').remove();
       });
     });
-</script> -->
+</script>
 <script>
   $( function() {
     $( ".datepicker" ).datepicker({dateFormat: 'yy-mm-dd'});
     {
-      $start = strtotime($_POST["start"]);
+      $start = strtotime($_POST["start_date"]);
     }
   } );
 </script>
