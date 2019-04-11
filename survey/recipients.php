@@ -3,15 +3,6 @@
   session_start();
 
   $email1 = "";
-  $email2 = "";
-  $email3 = "";
-  $email4 = "";
-  $email5 = "";
-  $email6 = "";
-  $email7 = "";
-  $email8 = "";
-  $email9 = "";
-  $email10 = "";
   $response_id = "";
 
 function makeID()
@@ -32,8 +23,8 @@ function makeID()
     //populate email_array
     if($_SERVER["REQUEST_METHOD"] == "POST")
     {
-        $wrong = "post";
         $survey_url = $_SESSION['survey_url'];
+        $response_id = makeID();
         $email1 = mysqli_real_escape_string($db, $_POST['email1']);
         $find_query = "SELECT * FROM surveys WHERE survey_url='$survey_url'";
         $search = mysqli_query($db, $find_query);
@@ -41,7 +32,8 @@ function makeID()
         if($match > 0)
         {
             $wrong = "no it's fine";
-
+            $sent_invite = "INSERT INTO recipients (survey_url, recipient, response_id) VALUES ('$survey_url', '$email1', '$response_id')";
+            mysqli_query($db, $sent_invite);
             require "Mail.php";
             $from = "surveymasterdevteam@gmail.com";
             $to = $email1;
@@ -53,17 +45,14 @@ function makeID()
             $body = '
             Over at SurveyMaster, home of award winning surveys, you have been invited to participate in a survey.
             To take the survey, copy and paste the link below into your browser:
-            localhost/survey/survey.php?survey_url='.$survey_url.'&response_id='.$response_id.'';
+            localhost/survey/survey.php?survey_url='.$survey_url.'&response_id='.$response_id.'
+            ';
+
             $headers = array ('From' => $from, 'To' => $to,'Subject' => $subject);
             $smtp = Mail::factory('smtp', array ('host' => $host, 'port' => $port, 'auth' => true, 'username' => $devemail, 'password' => $password));
             $mail = $smtp->send($to, $headers, $body);
-            echo '<h1>Made it?</h1>';
             //echo ' <meta http-equiv="refresh" content="0;url=survey.php?survey_url='.$survey_url.'>';
         }
-          else
-          {
-            $wrong = "yeah";
-          }
       }
     }
 ?>
@@ -127,6 +116,7 @@ function makeID()
                     <div class="input-icon">
                       <input
                         type="text"
+                        id="email1"
                         name="email1"
                         placeholder="Enter first recipient's email"
                         class="input"
@@ -136,14 +126,14 @@ function makeID()
                     </div>
 
                     <br>
-
+<!--
                     <div class="input-icon input-icon-right">
                       <input
                         type="text"
-                        name="email1"
+                        name="email2"
                         placeholder="Enter second recipient's email"
                         class="input"
-                        value="<?php echo $email1; ?>"
+                        value="<?php echo $email2; ?>"
                       />
                       <i>2:</i>
                     </div>
@@ -153,10 +143,10 @@ function makeID()
                     <div class="input-icon">
                       <input
                         type="text"
-                        name="email1"
+                        name="email3"
                         placeholder="Enter third recipient's email"
                         class="input"
-                        value="<?php echo $email1; ?>"
+                        value="<?php echo $email3; ?>"
                       />
                       <i>3:</i>
                     </div>
@@ -166,10 +156,10 @@ function makeID()
                     <div class="input-icon input-icon-right">
                       <input
                         type="text"
-                        name="email1"
+                        name="email4"
                         placeholder="Enter fourth recipient's email"
                         class="input"
-                        value="<?php echo $email1; ?>"
+                        value="<?php echo $email4; ?>"
                       />
                       <i>4:</i>
                     </div>
@@ -179,10 +169,10 @@ function makeID()
                     <div class="input-icon">
                       <input
                         type="text"
-                        name="email1"
+                        name="email5"
                         placeholder="Enter fifth recipient's email"
                         class="input"
-                        value="<?php echo $email1; ?>"
+                        value="<?php echo $email5; ?>"
                       />
                       <i>5:</i>
                     </div>
@@ -192,10 +182,10 @@ function makeID()
                     <div class="input-icon input-icon-right">
                       <input
                         type="text"
-                        name="email1"
+                        name="email6"
                         placeholder="Enter sixth recipient's email"
                         class="input"
-                        value="<?php echo $email1; ?>"
+                        value="<?php echo $email6; ?>"
                       />
                       <i>6:</i>
                     </div>
@@ -205,10 +195,10 @@ function makeID()
                     <div class="input-icon">
                       <input
                         type="text"
-                        name="email1"
+                        name="email7"
                         placeholder="Enter seventh recipient's email"
                         class="input"
-                        value="<?php echo $email1; ?>"
+                        value="<?php echo $email7; ?>"
                       />
                       <i>7:</i>
                     </div>
@@ -218,10 +208,10 @@ function makeID()
                     <div class="input-icon input-icon-right">
                       <input
                         type="text"
-                        name="email1"
+                        name="email8"
                         placeholder="Enter eigth recipient's email"
                         class="input"
-                        value="<?php echo $email1; ?>"
+                        value="<?php echo $email8; ?>"
                       />
                       <i>8:</i>
                     </div>
@@ -231,10 +221,10 @@ function makeID()
                     <div class="input-icon">
                       <input
                         type="text"
-                        name="email1"
+                        name="email9"
                         placeholder="Enter ninth recipient's email"
                         class="input"
-                        value="<?php echo $email1; ?>"
+                        value="<?php echo $email9; ?>"
                       />
                       <i>9:</i>
                     </div>
@@ -244,13 +234,13 @@ function makeID()
                     <div class="input-icon input-icon-right">
                       <input
                         type="text"
-                        name="email1"
+                        name="email10"
                         placeholder="Enter tenth recipient's email"
                         class="input"
-                        value="<?php echo $email1; ?>"
+                        value="<?php echo $email10; ?>"
                       />
                       <i>10:</i>
-                    </div>
+                    </div> -->
 
                     <br>
 

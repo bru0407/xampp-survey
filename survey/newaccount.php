@@ -11,7 +11,7 @@ include "server.php";
     <link rel="stylesheet" href="./style.css" type="text/css">
     <title>Account</title>
   </head>
-    <body>
+  <body>
     <div class="header">
     <div class="inner_header">
       <div class="logo_container">

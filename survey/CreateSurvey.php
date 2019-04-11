@@ -12,16 +12,14 @@ if(isset($_GET['logout']))
 $username = $_SESSION['username'];
 $survey_desc = "";
 $survey_title = "";
-$start = "";
-$end = "";
+$due_date = "";
 $type11 = "";
 $type12 = "";
 $type2 = "";
 $title_err = "";
 $desc_err = "";
 $survey_url = "";
-$start_err = "";
-$end_err = "";
+$due_err = "";
 $type11_err = "";
 $type12_err = "";
 $type2_err = "";
@@ -67,6 +65,20 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
   } while($url_survey['survey_url'] == $random_url);
   $survey_url = $random_url;
 
+  if(empty($_POST["due_date"]))
+  {
+    $due_err = "You must enter for how many days the survey will be open.";
+  }
+  else
+  {
+    $due_date = $_POST['due_date'];
+    if($due_date > 10 || $due_date < 0)
+    {
+      $due_err = "You must enter an integer between 0 and 10.";
+      $due_date = "";
+    }
+  }
+
   if(empty($_POST["type11"]))
   {
     $type11_err = "You must enter a first question of type 1.";
@@ -85,7 +97,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST")
     $type12 = mysqli_real_escape_string($db, $_POST['type12']);
   }
 
-if(empty($_POST["type2"]))
+  if(empty($_POST["type2"]))
   {
     $type2_err = "You must enter a type 2 question.";
   }
@@ -95,10 +107,10 @@ if(empty($_POST["type2"]))
   }
 
 
-  if(!empty($survey_url) && !empty($start) && !empty($end) && !empty($type11) && !empty($type12) && !empty($type2))
+  if(!empty($survey_url) && !empty($due_date) && !empty($type11) && !empty($type12) && !empty($type2))
   {
-    $insert_survey = "INSERT INTO surveys (username, survey_url, survey_title, survey_desc, survey_start_date, survey_end_date) VALUES ('$username',
-      '$survey_url', '$survey_title', '$survey_desc', '$start', '$end')";
+    $insert_survey = "INSERT INTO surveys (username, survey_url, survey_title, survey_desc, due_date) VALUES ('$username',
+      '$survey_url', '$survey_title', '$survey_desc', '$due_date')";
     mysqli_query($db, $insert_survey);
     $insert_type11 = "INSERT INTO type11 (survey_url, question) VALUES ('$survey_url', '$type11')";
     mysqli_query($db, $insert_type11);
@@ -136,8 +148,8 @@ if(empty($_POST["type2"]))
       };
     </script>
     <title>Create Survey</title>
-    <?php echo $start, $end;
-    echo $type11, $type12, $type2 ?>
+    <!-- <?php echo $start, $end;
+    echo $type11, $type12, $type2 ?> -->
   </head>
   <body>
     <div class="header">
@@ -186,24 +198,16 @@ if(empty($_POST["type2"]))
               <br>
               <textarea type="date" class="textbox" name="survey_desc" maxlength="500" rows="10" cols="50" onkeyup="countChar(this)" placeholder="Enter survey description." value="<?php echo $survey_desc; ?>"></textarea>
               <div id="charNum" class="charNum"></div>
-              <br>
             <span class="help-block"><?php echo $desc_err; ?></span>
             <br>
             </div>
+            <div class="form-group <?php echo (!empty($due_err)) ? 'has-error' : ''; ?>">
             <br>
-            <div class="form-group <?php echo (!empty($start_err)) ? 'has-error' : ''; ?>">
-              <label>Starting Date:</label>
-              <input type="date" class="datepicker" id="start" name="start" placeholder="Enter survey starting date." value="<?php echo $start; ?>">
+              <label>Due Date:</label>
+              <br>
+              <input type="int" class="due_date" id="due_date" name="due_date" placeholder="Enter how many days survey is open (0-10)." value="<?php echo $due_date; ?>">
             </div>
-            <br>
-            <span class="help-block"><?php echo $start_err; ?></span>
-            <br>
-            <div class="form-group <?php echo (!empty($end_err)) ? 'has-error' : ''; ?>">
-              <label>Ending Date:</label>
-              <input type="text" class="datepicker" id="end" name="end" placeholder="Enter survey ending date." value="<?php echo $end; ?>">
-            </div>
-            <br>
-            <span class="help-block"><?php echo $end_err; ?></span>
+            <span class="help-block"><?php echo $due_err; ?></span>
             <br>
             <br>
             <div class="form-group <?php echo (!empty($type11_err)) ? 'has-error' : ''; ?>">
@@ -233,38 +237,12 @@ if(empty($_POST["type2"]))
 
             <div class="button">
               <a href="recipients.php">
-                <input type="submit" name="submit" id="submit" class="submit" value="Create Account"/>
+                <input type="submit" name="submit" id="submit" class="submit" value="Create Survey"/>
               </a>
             </div>
           </fieldset>
         </form>
     </div>
-
-<!-- <script type="text/javascript">
-    $(document).ready(function(){
-      var i=1;
-      $('#add1').click(function(){
-           i++;
-           $('#type1').append('<tr id="row'+i+'" class="dynamic-added"><td><input type="text" name="name[]" placeholder="Enter 1-5 type question." class="type12" id="type12"/></td><td><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove">X</button></td></tr>');
-      });
-      $('#add2').click(function(){
-           i++;
-           $('#type2').append('<tr id="row'+i+'" class="dynamic-added"><td><input type="text" name="name[]" placeholder="Enter text type question." class="input" /></td><td><button type="button" name="remove" id="'+i+'" class="btn btn-danger btn_remove">X</button></td></tr>');
-      });
-      $(document).on('click', '.btn_remove', function(){
-           var button_id = $(this).attr("id");
-           $('#row'+button_id+'').remove();
-      });
-    });
-</script> -->
-<script>
-  $( function() {
-    $( ".datepicker" ).datepicker({dateFormat: 'yy-mm-dd'});
-    {
-      $start = strtotime($_POST["start"]);
-    }
-  } );
-</script>
 
   </body>
 <footer>Copyright &copy; COP4710<br></footer>

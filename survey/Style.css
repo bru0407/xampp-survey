@@ -30,6 +30,7 @@ input[type=text]
 
   padding-bottom: 5px;
   padding-top: 5px;
+  padding: 5px;
 }
 
 input[type=email]
@@ -400,7 +401,12 @@ footer
 
 .createsurvey-page input[type=date]
 {
+  border:2px solid black;
+  border-radius:4px;
   width: 100%;
+  padding-bottom: 5px;
+  padding-top: 5px;
+  padding: 5px;
 }
 
 .createsurvey-page input[type=text]
@@ -413,6 +419,7 @@ footer
   border:2px solid black;
   border-radius:4px;
   width: 100%;
+  padding: 5px;
 }
 
 .form-group
@@ -471,23 +478,6 @@ footer
   font-size: 25px;
 }
 
-/* Account Page */
-.account-page
-{
-  text-align: center;
-}
-
-.account-page .btn
-{
-  background-color: red;
-  color: white;
-  font-size: 16px;
-  padding: 12px 24px;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
 .account-page .btn:hover
 {
   background-color: darkred;
@@ -497,6 +487,50 @@ footer
 {
   color: white;
   text-decoration: none;
+}
+
+.red-btn
+{
+  padding-top: 80px;
+}
+
+#myInput {
+  background-image: url('https://image.flaticon.com/icons/svg/751/751463.svg');
+  background-size: 30px;
+  background-position: 9px 7px;
+  background-repeat: no-repeat;
+  width: 90%;
+  max-width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+#myTable {
+  background: white;
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid #ddd;
+  font-size: 18px;
+}
+
+#myTable th
+{
+  background-color: #f1f1f1;
+}
+
+#myTable th, #myTable td {
+  text-align: left;
+  padding: 12px;
+}
+
+#myTable tr {
+  border-bottom: 1px solid #ddd;
+}
+
+#myTable tr.header, #myTable tr:hover {
+  background-color: #f1f1f1;
 }
 
 /* Survey */

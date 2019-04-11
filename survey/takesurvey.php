@@ -4,6 +4,8 @@ include('server.php');
 
 session_start();
 
+$debug = "";
+
 $survey_url = "";
 $response_id = "";
 $survey_title = "";
@@ -20,6 +22,7 @@ $type2_err = "";
 
 if(isset($_GET['survey_url']) && isset($_GET['response_id']))
 {
+    $debug = "yes set";
   $survey_url = mysqli_real_escape_string($db, $_GET['survey_url']);
   $response_id = mysqli_real_escape_string($db, $_GET['response_id']);
   $check_url = "SELECT * FROM surveys WHERE survey_url='$survey_url'";
@@ -44,7 +47,9 @@ if(isset($_GET['survey_url']) && isset($_GET['response_id']))
     $type2table = "SELECT question FROM type2 WHERE survey_url='$survey_url'";
     $table_2 = mysqli_query($db, $type2table);
     $type2table_entries = mysqli_fetch_assoc($table_2);
-    $type2q = $type12table_entries['question'];
+    $type2q = $type2table_entries['question'];
+
+    $debug = "found match";
 
   }
 
@@ -57,6 +62,8 @@ if(isset($_GET['survey_url']) && isset($_GET['response_id']))
     else
     {
       $type11ans = $_POST['type11ans'];
+      $debug = "found type11ans";
+      echo '<h1>'.$type11ans.'</h1>';
       if($type11ans > 5 || $type11ans < 1)
       {
         $type11_err = "You must enter an integer between 1 and 5.";
@@ -99,6 +106,7 @@ if(isset($_GET['survey_url']) && isset($_GET['response_id']))
       mysqli_query($db, $submit_survey);
     }
   }
+
 }
 ?>
 <!DOCTYPE html>
@@ -122,8 +130,7 @@ if(isset($_GET['survey_url']) && isset($_GET['response_id']))
 </head>
 
 <body>
-
-<div class="header">
+    <div class="header">
     <div class="inner_header">
       <div class="logo_container">
         <a href="/survey/home.php">
@@ -150,59 +157,45 @@ if(isset($_GET['survey_url']) && isset($_GET['response_id']))
       </ul>
     </div>
   </div>
+        <div class="survey-page">
+          <h1><?php echo $survey_title ?></h1>
+          <p><?php echo $survey_desc ?></p>
+          <form action="takesurvey.php" method="post">
+          <fieldset class="take">
+            <br>
+            <div class="form-group  <?php echo (!empty($type11_err)) ? 'has-error' : ''; ?>">
+              <label><?php echo $type11q ?></label>
+              <br>
+              <input type="number" class="input" name="type11ans" placeholder="Please enter a value between 1 and 5." value="<?php echo $type11ans; ?>"/>
+              <br>
+            <span class="help-block"><?php echo $type11_err; ?></span>
+            <br>
+            </div>
+            <br>
+            <div class="form-group  <?php echo (!empty($type12_err)) ? 'has-error' : ''; ?>">
+              <label><?php echo $type12q ?></label>
+              <br>
+              <input type="number" class="input" name="type12ans" placeholder="Please enter a value between 1 and 5." value="<?php echo $type12ans; ?>"/>
+              <br>
+            <span class="help-block"><?php echo $type12_err; ?></span>
+            <br>
+            </div>
+            <div class="form-group  <?php echo (!empty($type2_err)) ? 'has-error' : ''; ?>">
+              <label><?php echo $type2q ?></label>
+              <br>
+              <textarea type="date" class="textbox" name="type2ans" maxlength="500" rows="10" cols="50" placeholder="Enter your text answer." value="<?php echo $type2ans; ?>"></textarea>
+            <span class="help-block"><?php echo $type2_err; ?></span>
+            <br>
+            </div>
 
-<div class="survey-page">
-  <h1><?php echo $survey_title ?></h1>
-  <p><?php echo $survey_desc ?></p>
-  <br>
-  <form class="box" action="survey.php">
-<div class="form-group <?php echo (!empty($type11_err)) ? 'has-error' : ''; ?>">
-    <h2>Question 1</h2>
-    <p>
-      <?php echo $type11q ?>
-    </p>
-    <p>
-      1 = Strongly Disagree <---> 5 = Strongly Agree</p>
-      <br>
-      <input type="int" class="type11ans" id="type11ans" name="type11ans" placeholder="1 2 3 4 5" value="<?php echo $type11ans; ?>">
+            <div class="button">
+                <input type="submit" name="submit" id="submit" class="submit" value="Submit"/>
+              </a>
+            </div>
+          </fieldset>
+        </form>
     </div>
-    <span class="help-block"><?php echo $type11_err; ?></span>
-    <br>
-  </div>
-  <br>
-  <div class="form-group <?php echo (!empty($type12_err)) ? 'has-error' : ''; ?>">
-    <h2>Question 2</h2>
-    <p>
-      <?php echo $type12q ?>
-    </p>
-    <p>
-      1 = Strongly Disagree <---> 5 = Strongly Agree</p>
-      <br>
-      <input type="int" class="type12ans" id="type12ans" name="type12ans" placeholder="1 2 3 4 5" value="<?php echo $type12ans; ?>">
-    </div>
-    <span class="help-block"><?php echo $type12_err; ?></span>
-    <br>
-  <br>
-  <div class="form-group <?php echo (!empty($type2_err)) ? 'has-error' : ''; ?>">
-    <h2>Question 3</h2>
-    <p>
-      <?php echo $type2q ?>
-    </p>
-    <br>
-    <br>
-    <textarea maxlength="200" type="input" value="<?php echo $type2ans; ?>" onkeyup="countChar(this)"rows="10" cols="50" name="type2ans" id="type2ans">
-    </textarea><br>
-    <div id="charNum" class="charNum"></div>
-    <span class="help-block"><?php echo $type2_err; ?></span>
-  </div>
-  <br>
 
-  <div class="padding-bottom">
-    <input type="submit" value="Submit">
-  </div>
-  </form>
-</div>
-
-</body>
+  </body>
 <footer>Copyright &copy; COP4710<br>
 </footer></html>
