@@ -44,6 +44,31 @@ if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true)
     </div>
       <h1>Welcome <?php echo $_SESSION['username']; ?></h1>
       <br>
+      
+      <table id ="table">
+          <tr>
+              <td>Survey Title</td>
+              <td>Answer Type 1-1</td>
+              <td>Answer Type 1-2</td>
+              <td>Answer Type 2</td>
+              <td>Start Date</td>
+              <td>End Date</td>
+          </tr>
+         function addRows() {
+  var table = document.getElementById( 'table' ),
+      row = table.insertRow(0),
+      cell1 = row.insertCell(0),
+      cell2 = row.insertCell(1),cell3 = row.insertCell(2),
+      cell4 = row.insertCell(3),cell5 = row.insertCell(4),
+      cell6 = row.insertCell(5);
+
+  cell1.innerHTML = 'Cell 1';
+  cell2.innerHTML = 'Cell 2';
+  cell3.innerHTML = 'Cell 3';
+  cell4.innerHTML = 'Cell 4';
+  cell5.innerHTML = 'Cell 5';
+  cell6.innerHTML = 'Cell 6';
+}
       <a href="logout.php" class="btn btn-danger">Logout</a>
   </body>
 <footer>Copyright &copy; COP4710<br></footer>
