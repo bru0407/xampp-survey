@@ -1,4 +1,5 @@
 <?php
+include "server.php";
 session_start();
 
 ?>
@@ -47,27 +48,50 @@ session_start();
         <input type="text" id="myInput" onkeyup="search()" placeholder="Search for names..">
 
         <table id="myTable">
-          <tr class="header">
-            <th class="account-top" style="width:60%;">Name</th>
-            <th class="account-top" style="width:40%;">Country</th>
-          </tr>
-          <tr>
-            <td>Alfreds Futterkiste</td>
-            <td>Germany</td>
-          </tr>
-          <tr>
-            <td>Berglunds snabbkop</td>
-            <td>Sweden</td>
-          </tr>
-          <tr>
-            <td>Island Trading</td>
-            <td>UK</td>
-          </tr>
-          <tr>
-            <td>Koniglich Essen</td>
-            <td>Germany</td>
-          </tr>
-        </table>
+  <?php
+
+    $username = $_SESSION['username'];
+    $results_page = "results.php?=";
+
+    $survey_table = "SELECT * FROM surveys WHERE username ='$username'";
+    $user_surveys = mysqli_query($db, $survey_table);
+    $num_surveys = mysqli_num_rows($user_surveys);
+
+    //Count the returned rows
+    if ($num_surveys > 0)
+    {
+    //Turn results into an array
+         echo "<table>
+            <tr>
+                <th>Survey Title</th>
+                <th>Survey Description</th>
+                <th>Survey Due</th>
+                <th>Results</th>
+            </tr>";
+        while($row = mysqli_fetch_array($user_surveys))
+        {
+
+             $survey_title = $row['survey_title'];
+             $survey_desc = $row['survey_desc'];
+             $survey_due = $row['due_date'];
+             $survey_url = $row['survey_url'];
+             $survey_results = $results_page.$survey_url;
+
+             echo
+             "<tr>
+
+             <td>" . $survey_title . "</td>
+             <td>" . $survey_desc . "</td>
+             <td>" . $survey_due . "</td>
+             <td><a href=\"" . $survey_results . "\">Results</a></td>
+             </tr>";
+         }
+         echo "</table>";
+    } else {
+         echo "0 results";
+    }
+
+    ?>
       </div>
 
       <button class="btn">
