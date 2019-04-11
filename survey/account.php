@@ -1,7 +1,7 @@
 <?php
-include "server.php";
 session_start();
 
+include "server.php";
 ?>
 
 <!DOCTYPE html>
@@ -16,7 +16,7 @@ session_start();
     <div class="inner_header">
       <div class="logo_container">
         <a href="/survey/home.php">
-          <img src="https://cdn.pixabay.com/photo/2017/05/15/23/48/survey-2316468_1280.png" alt="" width="50" height="50">
+          <img src="https://image.flaticon.com/icons/svg/1484/1484918.svg" alt="" width="50" height="50">
            <h1>
             SurveyMaster
           </h1>
@@ -45,58 +45,58 @@ session_start();
       <br>
 
       <div class="form-group">
-        <input type="text" id="myInput" onkeyup="search()" placeholder="Search for names..">
+        <input type="text" id="myInput" onkeyup="search()" placeholder="Search for survey titles...">
+
+        <br>
+        <br>
 
         <table id="myTable">
-  <?php
+          <tr class="header1">
+            <th class="account-top" style="width:25%; text-align: center;">Survey Title</th>
+            <th class="account-top" style="width:35%; text-align: center;">Survey Description</th>
+            <th class="account-top" style="width:20%; text-align: center;">Days Left</th>
+            <th class="account-top" style="width:20%; text-align: center;">Results</th>
+          </tr>
 
-    $username = $_SESSION['username'];
-    $results_page = "results.php?=";
+          <?php
+            $username = $_SESSION['username'];
+            $results_page = "results.php?=";
+            $survey_table = "SELECT * FROM surveys WHERE username ='$username'";
+            $user_surveys = mysqli_query($db, $survey_table);
+            $num_surveys = mysqli_num_rows($user_surveys);
+            //Count the returned rows
+            if ($num_surveys > 0)
+            {
+                while($row = mysqli_fetch_array($user_surveys))
+                {
+                     $survey_title = $row['survey_title'];
+                     $survey_desc = $row['survey_desc'];
+                     $survey_due = $row['due_date'];
+                     $survey_url = $row['survey_url'];
+                     $survey_results = $results_page.$survey_url;
+                     echo
+                     "<tr>
+                     <td>" . $survey_title . "</td>
+                     <td>" . $survey_desc . "</td>
+                     <td>" . $survey_due . "</td>
+                     <td><a href=\"" . $survey_results . "\">Results</a></td>
+                     </tr>";
+                 }
+            } else {
+                 echo "No surveys found";
+            }
+          ?>
 
-    $survey_table = "SELECT * FROM surveys WHERE username ='$username'";
-    $user_surveys = mysqli_query($db, $survey_table);
-    $num_surveys = mysqli_num_rows($user_surveys);
-
-    //Count the returned rows
-    if ($num_surveys > 0)
-    {
-    //Turn results into an array
-         echo "<table>
-            <tr>
-                <th>Survey Title</th>
-                <th>Survey Description</th>
-                <th>Survey Due</th>
-                <th>Results</th>
-            </tr>";
-        while($row = mysqli_fetch_array($user_surveys))
-        {
-
-             $survey_title = $row['survey_title'];
-             $survey_desc = $row['survey_desc'];
-             $survey_due = $row['due_date'];
-             $survey_url = $row['survey_url'];
-             $survey_results = $results_page.$survey_url;
-
-             echo
-             "<tr>
-
-             <td>" . $survey_title . "</td>
-             <td>" . $survey_desc . "</td>
-             <td>" . $survey_due . "</td>
-             <td><a href=\"" . $survey_results . "\">Results</a></td>
-             </tr>";
-         }
-         echo "</table>";
-    } else {
-         echo "0 results";
-    }
-
-    ?>
+        </table>
       </div>
 
-      <button class="btn">
-        <a href="logout.php" class="btn btn-danger">Logout</a>
-      </button>
+      <br>
+
+      <div class="red-btn">
+        <button class="btn">
+          <a href="logout.php" class="btn btn-danger">Logout</a>
+        </button>
+      </div>
     </div>
 
     <script>
@@ -120,6 +120,17 @@ session_start();
           }
         }
       }
+    </script>
+
+    <script>
+    function getProperColor($status)
+    {
+      // Need to update if statement to check if value is open, otherwise its closed thus red
+        if ($var > 0)
+            return '#00FF00';
+        else
+            return = '#FF0000';
+    }
     </script>
 
   </body>
